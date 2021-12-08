@@ -1,20 +1,18 @@
+CALCOLO LA LUNGHEZZA DELLA STRINGA
+
 .data
 
-
+????
 
 .code
 
-                #CALCOLO LA LUNGHEZZA DELLA STRINGA
 #scanf("%s",STR)->SYS3
 daddi $t0,r0,STR
 sd $t0,ind_sys3(r0)
 daddi $14,r0,p1_sys3
 syscall 3             #->r1= dimensione stringa
-
-
-
-
-SYSCALL 3: READ
+--------------------------------------------------------------------------------------
+SYSCALL 3: READ/SCANF
 
 .data
 buffer: .space 8
@@ -29,4 +27,4 @@ daddi $t0, r0, buffer # copia il valore buffer in $t0
 sd $t0, ind(r0) # salva l’indirizzo buffer in ind
 daddi r14, r0, par
 syscall 3       #->r1= stringa inserita
-
+-----------------------------------------------------------------------------------------
