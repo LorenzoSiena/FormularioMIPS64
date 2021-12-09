@@ -2,25 +2,26 @@
 # r14 = PreCall Parametro
 # r1 = $at -> usato come valore di ritorno di SYSCALL (v1 e v2 valori di ritorno) ($at è normalmente riservato al sistema)
 # $sp = Stack pointer, può essere aumentato e diminuito di n*8 byte alla volta con daddi
-
+# PC Program counter Registro che incrementato tiene conto della prossima istruzione N*4  0,4,8,12,16.... (manipolandolo permette i jump!) 
 
 ALLOCAZIONE STACK(ci salvo i valori di ritorno di salto per le varie funzioni annidate)
-??? FIX 8 byte stack!!!!!!!!!!!!!!!!!!!,????????????????????????
-     stack:
-[             ] 0
-[             ] 8
-[             ] 16
-[             ] 24
-[             ] 32 <- SP
-[-------------]
+
+(sposto il puntatore stando attento a non sconfinare nell'altra area di memoria causando uno Stack buffer overflow) 
 
 .data
 
 stack: .space 32
 
+      stack:
+0 [             ] 
+8 [             ] 
+16[             ] 
+24[          |31] <-SP 
+
+
 .code
 daddi $sp,r0,stack # carico l'indirizzo dello stack nel stack pointer
-daddi $sp,$sp,32   # e lo sposto di 4 righe alla fine dello stack
+daddi $sp,$sp,32   # e lo sposto di 4 righe alla fine dello stack al 32 esimo byte
 
 
 #allocazione e salvataggio registri (scrivo  nello stack e mi sposto indietro)
@@ -30,11 +31,11 @@ sd $s0, 0($sp)     # $s0 VARIABILE SALVATA nello stack
 $s0= [xxx]
 
      stack:
-0 [             ] 
-8 [             ] 8
-16[             ] 16
-24[     xxx        ] 24 <- SP
-[          ] 32 
+     0 [             ] 
+     8 [             ] 
+     16[          |23]<-SP   TORNO INDIETRO
+     24[  SCRITTO    ]       (E SCRIVO )  
+
 
 # ripristino dei registri e deallocazione della memoria (leggo dallo stack e mi sposto avanti)
 ld  $s0,0($sp)     # $s0 VARIABILE CARICATA dallo stack
@@ -43,21 +44,18 @@ daddi $sp,$sp,8    #sposto lo stack AVANTI di una riga
 
 $s0=[]  -->  $s0= [xxx]
 
-     stack:
-[             ] 0
-[             ] 8
-[             ] 16
-[             ] 24 
-[     xxx     ] 32 <- SP
-
+           stack:
+     0 [             ] 
+     8 [             ] 
+     16[             ]       (LEGGO)
+     24[  LETTO   |31] <-SP  MI SPOSTO AVANTI E DIMENTICO
+  
 -------------------------------------------------------------------------------------
 .data -> STR: .space 16
 
      STR:
-[      ciao      ] STR(0)->STR(7)  
-[     mamma      ] STR(8)->STR(15)
-[     guardami   ] STR(16)->STR()
-
+[0    ciao     7] STR(0)->STR(7)  
+[8    mamma   15] STR(8)->STR(15)
 
 
 [Indirizzi/puntatore]
