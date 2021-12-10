@@ -64,6 +64,25 @@ daddi $a0,r0,STR      #salvo indirizzo stringa in a0
 [Valori]
 ld $a0,STR(r0)        #salvo il primo elemento di SRT[0,1,2,3,4,5,6,7] in $a0 =[0]
 
+
+
+----------DIVISIONE/MOLTIPLICAZIONE-------
+dividere per 2,4,8,16
+SHIFT ARITMETICO A DX
+
+1_shift
+dsra $t0,$t0,1   DIVISO 2
+
+2_shift
+dsra $t0,$t0,2   DIVISO 4
+
+3_shift
+dsra $t0,$t0,3   DIVISO 8
+
+
+moltiplicare per 2,4,8,16
+
+
 ---------------------------ESERCIZI-----------------------------------------------------------
 CALCOLO LA LUNGHEZZA DELLA STRINGA
 
