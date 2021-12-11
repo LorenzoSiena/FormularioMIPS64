@@ -109,35 +109,33 @@ syscall 3             #->r1= dimensione stringa
 SYSCALL 3: READ/SCANF
 
 .data
-buffer: .space 8
-par: .space 8  #descrittore
-ind: .space 8  #indirizzo di partenza
-num_byte: .word 8
-
+p1_sys3:     .word 0     #0->STDIN oppure file descriptor
+ind_str:	 .space 8    #dove salvare la stringa
+dim: 	       .word 16    #quanti byte scrivere (16 Byte)
+??????????????????????????????????????????????????????????????????????????????????
 .code
-
 sd r0,par(r0)   # stdin
 daddi $t0, r0, buffer # copia il valore buffer in $t0
 sd $t0, ind(r0) # salva l’indirizzo buffer in ind
 daddi r14, r0, par
 syscall 3       #->r1= stringa inserita
+????????????????????????????????????????????????????????????????
 -----------------------------------------------------------------------------------------
 SYSCALL 5: PRINTF
 
 .data
-mess: .asciiz "Stampa i numeri %d e %d”
-arg_printf: .space 8 # primo parametro che deve contenere l’indiririzzo della stringa da visualizzare (mess)
-                     # Poiché nella stringa sono presenti 2 %d, seguono altri 2 parametri
-num1: .word 255
-num2: .space 8
-str: .asciiz "stringa non usata"
+str1: .asciiz "Stampa solo questa riga”
+str2: .asciiz "Stampa il numero %d”
+
+p1_sys5: .space 8 # primo parametro che deve contenere l’indiririzzo della stringa da visualizzare (mess)
+val1: .space 8       # SE nella stringa sono presenti N %d, seguono altri N parametri
 
 .code
+sd r1,val(r0)            # salvo il ritorno di una funzione in val(r0) ->OPZIONALE PER %d
 
-daddi $t0, r0, mess       #copia on $t0 l’indirizzo di mess
-sd $t0, arg_printf(r0)    #salva nel primo parametro l’ind. di mess
-daddi $t0, r0, 50         #la scelta di 50 é arbitraria
-sd $t0, num2(r0)
-daddi r14, r0, arg_printf
+daddi $t0,r0,str2        #metto l'indirizzo della stringa2 in t0     
+sd $t0,p1_sys5(r0)       #salvo t0 come prima riga nel par1
+daddi r14,r0,p1_sys5     #salvo il par1
+syscall 5
 
-syscall 5                #stampa la stringa
+
