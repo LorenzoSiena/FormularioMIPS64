@@ -14,77 +14,87 @@ Registro che incrementato tiene conto della prossima istruzione N*4  0,4,8,12,16
 ### (salvo nello stack i valori di ritorno di salto per le varie funzioni annidate)
 
 (sposto il puntatore stando attento a non sconfinare nell'altra area di memoria causando uno Stack buffer overflow) 
-
+```ruby
 .data
 
 stack: .space 32
-
+```
+```ruby
       stack:
 0 [             ] 
 8 [             ] 
 16[             ] 
 24[             ] 
-
-
-### .code
-### daddi $sp,r0,stack 
-carico l'indirizzo dello stack nel stack pointer
-### daddi $sp,$sp,32   
-e lo sposto di 4 righe alla fine dello stack al 32 esimo byte
-
+```
+-------------------------------------------------------------------------------------
+```ruby
+ .code
+daddi $sp,r0,stack #carico l'indirizzo dello stack nel stack pointer 
+daddi $sp,$sp,32   #e lo sposto di 4 righe alla fine dello stack al 32 esimo byte
+```
+```ruby
       stack:
 0 [             ] 
 8 [             ] 
 16[             ] 
 24[          |31] <-SP 
-
+```
+-------------------------------------------------------------------------------------
 
 # Allocazione e salvataggio registri 
 ### (scrivo  nello stack e mi sposto indietro)
+```ruby
 daddi $sp,$sp,-8   #sposto lo stack INDIETRO di una riga
 sd $s0, 0($sp)     # $s0 VARIABILE SALVATA nello stack
+```
 
 $s0= [xxx]
-
+```ruby
            stack:
      0 [             ] 
      8 [             ] 
      16[          |23]<-SP   TORNO INDIETRO
      24[  SCRITTO    ]       (E SCRIVO )  
-
+```
+-------------------------------------------------------------------------------------
 
 # Ripristino dei registri e deallocazione della memoria 
 ### (leggo dallo stack e mi sposto avanti)
+```ruby
 ld  $s0,0($sp)     # $s0 VARIABILE CARICATA dallo stack
 daddi $sp,$sp,8    #sposto lo stack AVANTI di una riga
-
+```
 
 $s0=[]  -->  $s0= [xxx]
-
+```ruby
            stack:
      0 [             ] 
      8 [             ] 
      16[             ]       (LEGGO)
      24[  LETTO   |31] <-SP  MI SPOSTO AVANTI E DIMENTICO
-  
+ ```
 -------------------------------------------------------------------------------------
+```ruby
 .data -> STR: .space 16
 
      STR:
 [0    ciao     7] STR(0)->STR(7)  
 [8    mamma   15] STR(8)->STR(15)
 
+```
 
 # Indirizzi/puntatore
+```ruby
 daddi $a0,r0,STR      #salvo indirizzo stringa in a0
-
+```
 # Valori
+```ruby
 ld $a0,STR(r0)        #salvo il primo elemento di SRT[0,1,2,3,4,5,6,7] in $a0 =[0]
+```
 
 
-
-----------DIVISIONE/MOLTIPLICAZIONE-------
-dividere per 2,4,8,16
+# DIVISIONE/MOLTIPLICAZIONE
+## dividere per 2,4,8,16
 SHIFT ARITMETICO A DX
 
 1_shift
@@ -97,12 +107,13 @@ dsra $t0,$t0,2   DIVISO 4
 dsra $t0,$t0,3   DIVISO 8
 
 
-moltiplicare per 2,4,8,16
+# moltiplicare per 2,4,8,16 #
+## ?
 
-
----------------------------ESERCIZI-----------------------------------------------------------
-CALCOLO LA LUNGHEZZA DELLA STRINGA
-
+---------------------------------------------------------------------
+# ESERCIZI
+# CALCOLO LA LUNGHEZZA DELLA STRINGA
+```ruby
 .data
 
 str1: .asciiz "inserisci una stringa di numeri"
@@ -120,10 +131,10 @@ daddi $t0,r0,STR
 sd $t0,ind_sys3(r0)
 daddi $14,r0,p1_sys3
 syscall 3             #->r1= dimensione stringa
-
+```
 
 # SYSCALL 3: READ/SCANF
-
+```ruby
 .data
 p1_sys3:     .word 0     #0->STDIN oppure file descriptor
 ind_str:	 .space 8    #dove salvare la stringa
@@ -136,9 +147,10 @@ sd $t0, ind(r0) # salva l’indirizzo buffer in ind
 daddi r14, r0, par
 syscall 3       #->r1= stringa inserita
 ????????????????????????????????????????????????????????????????
+```
 
 # SYSCALL 5: PRINTF
-
+```ruby
 .data
 str1: .asciiz "Stampa solo questa riga”
 str2: .asciiz "Stampa il numero %d”
@@ -153,5 +165,4 @@ daddi $t0,r0,str2        #metto l'indirizzo della stringa2 in t0
 sd $t0,p1_sys5(r0)       #salvo t0 come prima riga nel par1
 daddi r14,r0,p1_sys5     #salvo il par1
 syscall 5
-
-
+```
