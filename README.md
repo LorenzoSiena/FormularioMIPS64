@@ -19,6 +19,7 @@ Registro che incrementato tiene conto della prossima istruzione N*4  0,4,8,12,16
 
 stack: .space 32
 ```
+In memoria:
 ```ruby
       stack:
 0 [             ] 
@@ -32,6 +33,7 @@ stack: .space 32
 daddi $sp,r0,stack #carico l'indirizzo dello stack nel stack pointer 
 daddi $sp,$sp,32   #e lo sposto di 4 righe alla fine dello stack al 32 esimo byte
 ```
+In memoria:
 ```ruby
       stack:
 0 [             ] 
@@ -49,6 +51,8 @@ sd $s0, 0($sp)     # $s0 VARIABILE SALVATA nello stack
 ```
 
 $s0= [BANANA]
+
+In memoria:
 ```ruby
            stack:
      0 [             ] 
@@ -66,6 +70,8 @@ daddi $sp,$sp,8    #sposto lo stack AVANTI di una riga
 ```
 
 $s0=[]  -->  $s0= [PERA]
+
+In memoria:
 ```ruby
            stack:
      0 [             ] 
