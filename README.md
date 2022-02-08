@@ -1,12 +1,17 @@
-
 # REGISTRI
-## r0 = $0 = 0
-## r14 = PreCall Parametro
-## r1 = $at -> usato come valore di ritorno di SYSCALL (v1 e v2 valori di ritorno) ($at è normalmente riservato al sistema)
-## $sp = Stack pointer, può essere aumentato e diminuito di n*8 byte alla volta con daddi
-## PC Program counter Registro che incrementato tiene conto della prossima istruzione N*4  0,4,8,12,16.... (manipolandolo permette i jump!) 
+#### r0 = $0 = 0
+Registro Nullo
+#### r14
+PreCall Parametro
+#### r1 = $at 
+usato come valore di ritorno di SYSCALL (v1 e v2 valori di ritorno) ($at è normalmente riservato al sistema)
+#### $sp
+Stack pointer, può essere aumentato e diminuito di n*8 byte alla volta con daddi
+#### PC Program counter
+Registro che incrementato tiene conto della prossima istruzione N*4  0,4,8,12,16.... (manipolandolo permette i jump!) 
 
-# ALLOCAZIONE STACK(ci salvo i valori di ritorno di salto per le varie funzioni annidate)
+# ALLOCAZIONE STACK 
+### (salvo nello stack i valori di ritorno di salto per le varie funzioni annidate)
 
 (sposto il puntatore stando attento a non sconfinare nell'altra area di memoria causando uno Stack buffer overflow) 
 
@@ -21,9 +26,11 @@ stack: .space 32
 24[             ] 
 
 
-.code
-daddi $sp,r0,stack # carico l'indirizzo dello stack nel stack pointer
-daddi $sp,$sp,32   # e lo sposto di 4 righe alla fine dello stack al 32 esimo byte
+### .code
+### daddi $sp,r0,stack 
+carico l'indirizzo dello stack nel stack pointer
+### daddi $sp,$sp,32   
+e lo sposto di 4 righe alla fine dello stack al 32 esimo byte
 
       stack:
 0 [             ] 
@@ -32,7 +39,8 @@ daddi $sp,$sp,32   # e lo sposto di 4 righe alla fine dello stack al 32 esimo by
 24[          |31] <-SP 
 
 
-## allocazione e salvataggio registri (scrivo  nello stack e mi sposto indietro)
+# Allocazione e salvataggio registri 
+### (scrivo  nello stack e mi sposto indietro)
 daddi $sp,$sp,-8   #sposto lo stack INDIETRO di una riga
 sd $s0, 0($sp)     # $s0 VARIABILE SALVATA nello stack
 
@@ -45,7 +53,8 @@ $s0= [xxx]
      24[  SCRITTO    ]       (E SCRIVO )  
 
 
-## ripristino dei registri e deallocazione della memoria (leggo dallo stack e mi sposto avanti)
+# Ripristino dei registri e deallocazione della memoria 
+### (leggo dallo stack e mi sposto avanti)
 ld  $s0,0($sp)     # $s0 VARIABILE CARICATA dallo stack
 daddi $sp,$sp,8    #sposto lo stack AVANTI di una riga
 
