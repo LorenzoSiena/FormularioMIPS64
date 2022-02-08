@@ -4,7 +4,7 @@
 # $sp = Stack pointer, può essere aumentato e diminuito di n*8 byte alla volta con daddi
 # PC Program counter Registro che incrementato tiene conto della prossima istruzione N*4  0,4,8,12,16.... (manipolandolo permette i jump!) 
 
-ALLOCAZIONE STACK(ci salvo i valori di ritorno di salto per le varie funzioni annidate)
+#ALLOCAZIONE STACK(ci salvo i valori di ritorno di salto per le varie funzioni annidate)
 
 (sposto il puntatore stando attento a non sconfinare nell'altra area di memoria causando uno Stack buffer overflow) 
 
