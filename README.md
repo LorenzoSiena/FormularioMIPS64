@@ -48,13 +48,13 @@ daddi $sp,$sp,-8   #sposto lo stack INDIETRO di una riga
 sd $s0, 0($sp)     # $s0 VARIABILE SALVATA nello stack
 ```
 
-$s0= [xxx]
+$s0= [BANANA]
 ```ruby
            stack:
      0 [             ] 
      8 [             ] 
      16[          |23]<-SP   TORNO INDIETRO
-     24[  SCRITTO    ]       (E SCRIVO )  
+     24[  BANANA     ]       (E SCRIVO )  
 ```
 -------------------------------------------------------------------------------------
 
@@ -65,13 +65,13 @@ ld  $s0,0($sp)     # $s0 VARIABILE CARICATA dallo stack
 daddi $sp,$sp,8    #sposto lo stack AVANTI di una riga
 ```
 
-$s0=[]  -->  $s0= [xxx]
+$s0=[]  -->  $s0= [PERA]
 ```ruby
            stack:
      0 [             ] 
      8 [             ] 
      16[             ]       (LEGGO)
-     24[  LETTO   |31] <-SP  MI SPOSTO AVANTI E DIMENTICO
+     24[   P**A   |31] <-SP  MI SPOSTO AVANTI E DIMENTICO
  ```
 -------------------------------------------------------------------------------------
 ```ruby
@@ -98,14 +98,19 @@ ld $a0,STR(r0)        #salvo il primo elemento di SRT[0,1,2,3,4,5,6,7] in $a0 =[
 SHIFT ARITMETICO A DX
 
 1_shift
-dsra $t0,$t0,1   DIVISO 2
+```ruby
+dsra $t0,$t0,1   #DIVISO 2
+```
 
 2_shift
-dsra $t0,$t0,2   DIVISO 4
+```ruby
+dsra $t0,$t0,2   #DIVISO 4
+```
 
 3_shift
-dsra $t0,$t0,3   DIVISO 8
-
+```ruby
+dsra $t0,$t0,3   #DIVISO 8
+```
 
 # moltiplicare per 2,4,8,16 #
 ## ?
