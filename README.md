@@ -148,6 +148,7 @@ syscall 3
 
 # Dopo la syscall trovo 
 # r1 = dimensione stringa / numero parametri letti
+move $a1,r1  # salvo il numero di byte letti
 
 ```
 Tradotto in c:
@@ -177,12 +178,12 @@ daddi r14, r0, par
 syscall 3       #->r1= stringa inserita
 --Testing-----
 
-#???
+
 daddi $t0,r0,STR     # ???
 sd $t0,ind_str(r0)   # ???
 daddi r14,r0,p1_sys3 # ???
 syscall 3
- 
+move $a1,r1  # salvo il numero di byte letti $a1=r1
 # Dopo la syscall trovo 
 # r1 = dimensione stringa / numero parametri letti
 
