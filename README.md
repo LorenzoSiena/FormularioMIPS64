@@ -217,3 +217,12 @@ Tradotto in c:
 ```c
 printf("Stampa il numero %d",n);
 ```
+
+
+# TO-DO
+* slti 
+* move
+* for
+* j
+* jr
+* altri registri
