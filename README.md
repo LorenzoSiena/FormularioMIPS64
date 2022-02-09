@@ -241,11 +241,27 @@ printf("Stampa il numero %d",n);
  jal input_unsigned
  move $a2,r1
 ```
+## Entrare in una sub-routing:  :warning:
+
+```ruby
+ jal funzione
+ #r1=CONTIENE IL MIO VALORE?
+ syscall 0
+ 
+ 
+ funzione:
+ #push dello stack con le variabili da usare
+ #routine
+ #pop dello stack con le variabili da usare
+ 
+ jr $ra
+ 
+ ```
 
 # TO-DO
 * slti 
 * move
 * for
-* j
+* jal
 * jr
 * altri registri
