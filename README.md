@@ -218,6 +218,14 @@ Tradotto in c:
 printf("Stampa il numero %d",n);
 ```
 
+## Caricare unsigned int:  :warning:
+
+```ruby
+ ?include?
+ 
+ jal input_unsigned
+ move $a2,r1
+```
 
 # TO-DO
 * slti 
