@@ -147,7 +147,7 @@ daddi $14,r0,p1_sys3
 syscall 3       
 
 # Dopo la syscall trovo 
-# r1 = dimensione stringa
+# r1 = dimensione stringa / numero parametri letti
 
 ```
 Tradotto in c:
@@ -182,6 +182,9 @@ daddi $t0,r0,STR     # ???
 sd $t0,ind_str(r0)   # ???
 daddi r14,r0,p1_sys3 # ???
 syscall 3
+ 
+# Dopo la syscall trovo 
+# r1 = dimensione stringa / numero parametri letti
 
 
 
