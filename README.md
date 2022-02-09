@@ -61,7 +61,7 @@ In memoria:
 ```
 -------------------------------------------------------------------------------------
 
-# Allocazione e salvataggio registri  :heavy_check_mark:
+# (PUSH) Allocazione e salvataggio registri  :heavy_check_mark:
 ### (scrivo  nello stack e mi sposto indietro)
 ```ruby
 daddi $sp,$sp,-8   #sposto lo stack INDIETRO di una riga
@@ -80,7 +80,7 @@ In memoria:
 ```
 -------------------------------------------------------------------------------------
 
-# Ripristino dei registri e deallocazione della memoria  :heavy_check_mark:
+# (POP) Ripristino dei registri e deallocazione della memoria  :heavy_check_mark:
 ### (leggo dallo stack e mi sposto avanti)
 ```ruby
 ld  $s0,0($sp)     # $s0 VARIABILE CARICATA dallo stack
@@ -185,15 +185,6 @@ dim: 	       .word 16    #quanti byte scrivere (16 Byte)
 
 .code
 
---Testing----
-sd r0,par(r0)   # stdin
-daddi $t0, r0, buffer # copia il valore buffer in $t0
-sd $t0, ind(r0) # salva l’indirizzo buffer in ind
-daddi r14, r0, par
-syscall 3       #->r1= stringa inserita
---Testing-----
-
-
 daddi $t0,r0,STR     # ???
 sd $t0,ind_str(r0)   # ???
 daddi r14,r0,p1_sys3 # ???
@@ -249,12 +240,21 @@ printf("Stampa il numero %d",n);
  syscall 0
  
  
- funzione:
- #push dello stack con le variabili da usare
- #routine
- #pop dello stack con le variabili da usare
- 
- jr $ra
+funzione:
+
+      #PUSH
+      daddi $sp,$sp,-16
+      sd $s0,0($sp)
+      sd $s1,8($sp)
+
+      #ROUTINE
+
+      #POP
+      ld $s0,0($sp)
+      ld $s1,8($sp)
+      daddi $sp,$sp,16
+
+jr $ra
  
  ```
 
