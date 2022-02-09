@@ -1,4 +1,7 @@
-# REGISTRI
+Testato     =:heavy_check_mark:
+Non testato =:warning:
+
+# REGISTRI :heavy_check_mark:
 #### r0 = $0 = 0
 Registro Nullo
 #### r14
@@ -10,7 +13,7 @@ Stack pointer, può essere aumentato e diminuito di n*8 byte alla volta con dadd
 #### PC Program counter
 Registro che incrementato tiene conto della prossima istruzione N*4  0,4,8,12,16.... (manipolandolo permette i jump!) 
 
-# ALLOCAZIONE STACK 
+# ALLOCAZIONE STACK  :heavy_check_mark:
 ### (salvo nello stack i valori di ritorno di salto per le varie funzioni annidate)
 
 (sposto il puntatore stando attento a non sconfinare nell'altra area di memoria causando uno Stack buffer overflow) 
@@ -43,7 +46,7 @@ In memoria:
 ```
 -------------------------------------------------------------------------------------
 
-# Allocazione e salvataggio registri 
+# Allocazione e salvataggio registri  :heavy_check_mark:
 ### (scrivo  nello stack e mi sposto indietro)
 ```ruby
 daddi $sp,$sp,-8   #sposto lo stack INDIETRO di una riga
@@ -62,7 +65,7 @@ In memoria:
 ```
 -------------------------------------------------------------------------------------
 
-# Ripristino dei registri e deallocazione della memoria 
+# Ripristino dei registri e deallocazione della memoria  :heavy_check_mark:
 ### (leggo dallo stack e mi sposto avanti)
 ```ruby
 ld  $s0,0($sp)     # $s0 VARIABILE CARICATA dallo stack
@@ -89,17 +92,17 @@ In memoria:
 
 ```
 
-# Indirizzi/puntatore
+# Indirizzi/puntatore :warning:
 ```ruby
 daddi $a0,r0,STR      #salvo indirizzo stringa in a0
 ```
-# Valori
+# Valori :warning:
 ```ruby
 ld $a0,STR(r0)        #salvo il primo elemento di SRT[0,1,2,3,4,5,6,7] in $a0 =[0]
 ```
 
 
-# DIVISIONE/MOLTIPLICAZIONE
+# DIVISIONE/MOLTIPLICAZIONE :heavy_check_mark:
 ## dividere per 2,4,8,16
 SHIFT ARITMETICO A DX
 
@@ -123,10 +126,10 @@ dsra $t0,$t0,3   #DIVISO 8
 
 ---------------------------------------------------------------------
 # ESERCIZI
-# CALCOLO LA LUNGHEZZA DELLA STRINGA
+# CALCOLO LA LUNGHEZZA DELLA STRINGA :warning:
 ```ruby
 .data
-
+-- Testing--
 str1: .asciiz "inserisci una stringa di numeri"
 str2: .asciiz "la somma e' %d \n"
 
@@ -134,7 +137,7 @@ p1_sys3: .word 0
 ind_sys3: .space 8
 dim_sys3: .word 16
 STR: .space 16
-
+-- Testing--
 .code
 
 #scanf("%s",STR)->SYS3
@@ -147,9 +150,14 @@ syscall 3
 # r1 = dimensione stringa
 
 ```
+Tradotto in c:
+```c
+-- Testing---
+```
 
 
-# SYSCALL 3: READ/SCANF
+
+# SYSCALL 3: READ/SCANF :warning:
 ```ruby
 .data
 p1_sys3:     .word 0     #0->STDIN oppure file descriptor
@@ -171,7 +179,7 @@ Tradotto in c:
 -- Testing---
 ```
 
-# SYSCALL 5: PRINTF
+# SYSCALL 5: PRINTF :heavy_check_mark:
 
 ```ruby
 .data
