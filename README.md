@@ -160,6 +160,9 @@ Tradotto in c:
 # SYSCALL 3: READ/SCANF :warning:
 ```ruby
 .data
+
+STR: .space 16
+
 p1_sys3:     .word 0     #0->STDIN oppure file descriptor
 ind_str:	 .space 8    #dove salvare la stringa
 dim: 	       .word 16    #quanti byte scrivere (16 Byte)
@@ -173,10 +176,19 @@ sd $t0, ind(r0) # salva l’indirizzo buffer in ind
 daddi r14, r0, par
 syscall 3       #->r1= stringa inserita
 --Testing-----
+
+#???
+daddi $t0,r0,STR     # ???
+sd $t0,ind_str(r0)   # ???
+daddi r14,r0,p1_sys3 # ???
+syscall 3
+
+
+
 ```
 Tradotto in c:
 ```c
--- Testing---
+scanf("%s",STR);
 ```
 
 # SYSCALL 5: PRINTF :heavy_check_mark:
