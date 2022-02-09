@@ -1,6 +1,9 @@
 Testato     =:heavy_check_mark:
 Non testato =:warning:
 
+
+![Screenshot](screenshot.png)
+
 # REGISTRI :heavy_check_mark:
 #### r0 = $0 = 0
 Registro Nullo
@@ -12,7 +15,8 @@ usato come valore di ritorno di SYSCALL (v1 e v2 valori di ritorno) ($at è norm
 Stack pointer, può essere aumentato e diminuito di n*8 byte alla volta con daddi
 #### PC Program counter
 Registro che incrementato tiene conto della prossima istruzione N*4  0,4,8,12,16.... (manipolandolo permette i jump!) 
-
+#### $a0,a1,a2
+Registri per gli argomenti delle funzioni custom
 # ALLOCAZIONE STACK  :heavy_check_mark:
 ### (salvo nello stack i valori di ritorno di salto per le varie funzioni annidate)
 
@@ -221,7 +225,7 @@ printf("Stampa il numero %d",n);
 ## Caricare unsigned int:  :warning:
 
 ```ruby
- ?include?
+ #include input_unsigned.s
  
  jal input_unsigned
  move $a2,r1
