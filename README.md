@@ -125,8 +125,8 @@ dsra $t0,$t0,3   #DIVISO 8
 ## ?
 
 ---------------------------------------------------------------------
-# ESERCIZI
-# CALCOLO LA LUNGHEZZA DELLA STRINGA :warning:
+# SYSTEM CALL
+## CALCOLO LA LUNGHEZZA DELLA STRINGA :warning:
 ```ruby
 .data
 -- Testing--
@@ -158,7 +158,7 @@ Tradotto in c:
 
 
 
-# SYSCALL 3: READ/SCANF :warning:
+## SYSCALL 3: READ/SCANF :warning:
 ```ruby
 .data
 
@@ -195,7 +195,7 @@ Tradotto in c:
 scanf("%s",STR);
 ```
 
-# SYSCALL 5: PRINTF :heavy_check_mark:
+## SYSCALL 5: PRINTF :heavy_check_mark:
 
 ```ruby
 .data
