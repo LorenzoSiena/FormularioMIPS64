@@ -2,21 +2,32 @@ Testato     =:heavy_check_mark:
 Non testato =:warning:
 
 
-![Screenshot](screenshot.png)
 
 # REGISTRI :heavy_check_mark:
-#### r0 = $0 = 0
+![Registri](Registri.png)
+### r0 = $0 = 0
 Registro Nullo
-#### r14
-PreCall Parametro
-#### r1 = $at 
+### r14
+Riservato e usato prima di SYSCALL
+### r1 = $at 
 usato come valore di ritorno di SYSCALL (v1 e v2 valori di ritorno) ($at è normalmente riservato al sistema)
-#### $sp
+### $sp
 Stack pointer, può essere aumentato e diminuito di n*8 byte alla volta con daddi
-#### PC Program counter
+### PC Program counter
 Registro che incrementato tiene conto della prossima istruzione N*4  0,4,8,12,16.... (manipolandolo permette i jump!) 
-#### $a0,a1,a2
+
+### $a0-$a3
 Registri per gli argomenti delle funzioni custom
+
+### $t0-$t7
+Registri temporanei
+
+### $s0-$s7
+Registri usati come indici per i loop
+
+### $r31=$ra
+Registro di jump return jr $ra
+
 # ALLOCAZIONE STACK  :heavy_check_mark:
 ### (salvo nello stack i valori di ritorno di salto per le varie funzioni annidate)
 
