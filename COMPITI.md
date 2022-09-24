@@ -132,3 +132,267 @@ main()
 ### ASSEMBLY MIPS
 ```asm
 ```
+# 24/02/2022 T1
+Scrivere un programma in linguaggio Assembly MIPS che traduce il seguente programma C
+```c
+int calcola(char *st, int d, int val)
+{
+    int j, cnt;
+    cnt = 0;
+    for (j = 0; j < d; j++)
+        if (st[j] - 48 < val)
+            cnt++;
+        else
+            cnt += 2;
+    return cnt;
+}
+main()
+{
+    char ST[16];
+    int i, num, ris;
+    i = 0;
+    do
+    {
+        printf("Inserisci una stringa di soli numeri \n");
+        scanf("%s", ST);
+        printf("Inserisci un numero a una cifra");
+        scanf("%d", &num);
+        ris = calcola(ST, strlen(ST), num);
+        printf(" Valore= %d \n", ris);
+        i++;
+    } while (i < 3);
+}
+```
+### ASSEMBLY MIPS
+```asm
+.data   
+stack:      .space  32
+ST:         .space  16
+
+hint_a:     .asciiz "Inserisci una stringa di soli numeri\n"
+hint_b:     .asciiz "Inserisci un numero a una sola cifra\n"
+ans_str:    .asciiz " Valore= %d\n"
+
+fd_sys3:    .word   0
+_str_sys3:  .space  8
+dim_sys3:   .word   16
+
+_str_sys5:  .space  8
+ris:        .space  8
+
+.code
+; inizializzo lo stack
+daddi   $sp, $0, stack
+daddi   $sp, $sp, 32        
+daddi   $s0, $0, 0              ; i = 0
+do: daddi   $t0, $0, hint_a
+    sd      $t0, _str_sys5($0)
+    daddi   r14, $0, _str_sys5
+    syscall 5                   ; printf("Inserisci una stringa di soli numeri\n");
+
+    daddi   $t0, $0, ST
+    sd      $t0, _str_sys3($0)
+    daddi   r14, $0, fd_sys3
+    syscall 3                   ; scanf("%s",ST);
+    move    $s1, r1             ; $s1 = strlen(ST)
+
+    daddi   $t0, $0, hint_b
+    sd      $t0, _str_sys5($0)
+    daddi   r14, $0, _str_sys5
+    syscall 5                   ; printf("Inserisci un numero a una cifra");
+
+    jal     input_unsigned      ; scanf("%d",&num);  
+    ; salvo come terzo parametro per calcola il valore restituito dalla chiamata
+    move    $a2, r1
+
+; il primo parametro è l'indirizzo della stringa
+    daddi   $a0, $0, ST        
+; Il secondo parametro è la lunghezza della stringa che ho memorizzato in $s1
+    move    $a1, $s1
+    jal     calcola
+; salvo in ris il valore restituito utile alla printf
+    sd      r1, ris($0)
+
+    daddi   $t0, $0, ans_str
+    sd      $t0, _str_sys5($0)
+    daddi   r14, $0, _str_sys5
+    syscall 5                   ; printf(" Valore= %d \n",ris);
+
+    daddi   $s0, $s0, 1         ; i++
+    slti    $t0, $s0, 3         ; $t0 = 0 <- $s0 >= 3
+    beq     $t0, $0, end        ; se $t0 = 0 esci dal ciclo, altrimenti salta a do
+    j       do
+end:    syscall 0
+
+calcola:    daddi   $sp, $sp, -16
+            sd      $s0, 0($sp)
+            sd      $s1, 8($sp)
+
+daddi       $s0, $0, 0              ; i = 0
+daddi       $s1, $0, 0              ; cnt = 0
+for:        slt     $t0, $s0, $a1
+            beq     $t0, $0, end_f
+
+            dadd    $t1, $a0, $s0   ; $t1 = &st[i]
+            lbu     $t1, 0($t1)     ; $t1 = st[i]
+            daddi   $t0, $t1, -48   ; $t0 = st[i] - 48
+
+            slt     $t0, $t0, $a2
+            beq     $t0, $0, inc_2  ; incrementa cnt di due se $a2 >= $t0
+            daddi   $s1, $s1, 1     ; cnt++
+            j       inc_i
+inc_2:      daddi   $s1, $s1, 2
+
+inc_i:      daddi   $s0, $s0, 1     ; i++
+            j       for
+end_f:      move    r1, $s1         ; salvo il valore di ritorno
+; carico i dati dallo stack
+            ld      $s1, 8($sp)
+            ld      $s0, 0($sp)
+            daddi   $sp, $sp, 16
+
+            jr      $ra
+
+#include input_unsigned.s
+
+```
+#  24/02/2022 T2
+Scrivere un programma in linguaggio Assembly MIPS che traduce il seguente programma C
+```c
+int calcola(char *a0)
+{
+    int j, cnt;
+    j = 0;
+    cnt = 0;
+    do
+    {
+        if (a0[j] < 58)
+            cnt++;
+        j++;
+    } while (a0[j] != 48);
+    return cnt;
+}
+main()
+{
+    char ST[16];
+    int i, num, ris;
+    for (i = 0; i < 4; i++)
+    {
+        printf("Inserisci una stringa terminata con il carattere 0 \n");
+        scanf("%s", ST);
+        printf("Inserisci un numero");
+        scanf("%d", &num);
+        ris = calcola(ST) + num;
+        printf(" Valore= %d \n", ris);
+    }
+}
+```
+### ASSEMBLY MIPS
+```asm
+.data
+str: .space 16
+stack: .space 32
+
+str1: .asciiz "Inserisci una stringa terminata con il carattere 0 \n"
+str2: .asciiz "Inserisci un numero"
+str3: .asciiz " Valore= %d \n"
+
+;parametri  syscall 3
+p1s3: .word 0
+p2s3: .space 8
+p3s3: .word 16
+
+;parametri syscall 5
+p1s5: .space 8
+ris: .space 8
+
+.code
+;inizializzazione stack
+daddi $sp,$0,stack
+daddi $sp,$sp,32
+
+; for(i=0;i<4;i++) {
+	daddi $s0,$0,0
+for: 	slti $t0,$s0,4
+	beq $t0,$0,fine_for
+
+;    printf("Inserisci una stringa terminata con il carattere 0 n");
+	daddi $t0,$0,str1
+	sd $t0,p1s5($0)
+	daddi r14,$0,p1s5
+	syscall 5
+
+;   scanf("%s",ST);
+	daddi $t0,$0,str
+	sd $t0,p2s3($0)
+	daddi r14,$0,p1s3
+	syscall 3
+
+;   printf("Inserisci un numero");
+	daddi $t0,$0,str2
+	sd $t0,p1s5($0)
+	daddi r14,$0,p1s5
+	syscall 5
+
+;   scanf("%d",&num);
+	jal input_unsigned
+	move $s1,r1
+
+;   ris= calcola(ST)+num;
+	daddi $a0,$0,str
+	jal calcola
+	dadd $t0,r1,$s1
+	sd $t0,ris($0)
+
+;   printf(" Valore= %d n",ris);
+	daddi $t0,$0,str3
+	sd $t0,p1s5($0)
+	daddi r14,$0,p1s5
+	syscall 5
+
+;	i++
+	daddi $s0,$s0,1
+	j for
+
+fine_for: syscall 0
+
+;--------------------------------------------------------
+
+;int calcola(char *a0)
+calcola: daddi $sp,$sp,-16
+	sd $s0,0($sp)
+	sd $s1,8($sp)
+
+;   j=0;
+	daddi $s0,$0,0
+;  cnt=0;
+	daddi $s1,$0,0
+
+;  do{
+;  	if(a0[j]<58)
+
+do: 	dadd $t0,$a0,$s0
+	lbu $t1,0($t0)
+	slti $t0,$t1,58
+
+	beq $t0,$0,incr_j ; saltiamo all'incremento di j se la condizione a0[j] < 58 è falsa
+ 
+;	cnt++;
+	daddi $s1,$s1,1
+;	j++
+incr_j: daddi $s0,$s0,1
+
+; } while (a0[j]!=48);
+	  daddi $t0,$0,48
+	  bne $t1,$t0,do
+
+	move r1,$s1
+	ld $s1,8($sp)
+	ld $s0,0($sp)
+	daddi $sp,$sp,16
+	jr r31
+
+#include input_unsigned.s
+
+```
+
