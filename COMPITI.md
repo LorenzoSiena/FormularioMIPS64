@@ -395,4 +395,203 @@ incr_j: daddi $s0,$s0,1
 #include input_unsigned.s
 
 ```
+#  31/01/2022
+Scrivere un programma in linguaggio Assembly MIPS che traduce il seguente programma C
+```c
+int processa(char *st, int d)
+{
+    int i;
+    for (i = 0; i < d; i++)
+        if (st[i] >= 58)
+            break;
+    return i;
+}
+main()
+{
+    char STRNG[16];
+    int i, val, num;
+    for (i = 0; i < 3; i++)
+    {
+        do
+        {
+            printf("Indica quanti caratteri (numeri) vuoi inserire (>=3))\n");
+            scanf("%d", &num);
+        } while (num < 3);
+        printf("Inserisci la stringa con %d numeri \n", num);
+        scanf("%s", STRNG);
+        val = processa(STRNG, num);
+        printf(" Valore= %d \n", val);
+    }
+}
+```
+### ASSEMBLY MIPS
+```asm
+.data
+STRNG: .space 16
 
+msg1: .asciiz "Indica quanti caratteri(numeri) vuoi inserire (>=3)) \n"
+msg2: .asciiz "Inserisci la stringa con %d numeri\n"
+msg3: .asciiz "Valore= %d \n"
+
+p1s3: .word 0
+inds3: .space 8
+dim: .word 16
+
+p1s5: .space 8
+val: .space 8
+
+stack: .space 32
+
+.code
+daddi $sp, $0, stack
+daddi $sp, $sp, 32
+
+daddi $s0, $0, 0 ;i=0
+
+; for(i=0;i<3;i++) {
+for: 	slti $t0, $s0, 3 ;i<3
+	beq $t0, $0, endfor
+
+; do{ printf("Indica quanti caratteri(numeri) vuoi inserire (>=3)) \n");
+	daddi $t0, $0, msg1
+	sd $t0, p1s5($0)  ; lo metto prima del do così lo eseguo una sola volta
+do: 	daddi r14, $0, p1s5 
+	syscall 5
+; scanf("%d",&num);
+	jal input_unsigned
+	move $s1, $at ;num
+; }while(num<3);
+	slti $t0, $s1, 3
+	bne $t0, $0, do
+
+; printf("Inserisci la stringa con %d numeri\n",num);
+	sd $s1, val($0)
+	daddi $t0, $0, msg2
+	sd $t0, p1s5($0)
+	daddi r14, $0, p1s5
+	syscall 5
+
+; scanf("%s",STRNG);
+	daddi $a0, $0, STRNG
+	sd $a0, inds3($0)
+	daddi r14, $0, p1s3
+	syscall 3
+
+; val=processa(STRNG,num); 
+	move $a1, $s1
+	jal processa
+
+; printf(" Valore= %d \n",val); 
+	sd r1, val($0)
+	daddi $t0, $0, msg3
+	sd $t0, p1s5($0)
+	daddi r14, $0, p1s5
+	syscall 5
+
+daddi $s0, $s0, 1 ;i++
+j for
+
+endfor:
+syscall 0
+
+;int processa(char *st, int d)
+;{ int i;
+ 
+; for(i=0;i<d;i++)
+; if(st[i]>=58)
+; break; 
+ 
+; return i;
+;}
+processa:   daddi $sp, $sp, -8
+		sd $s0, 0($sp)
+
+; for(i=0;i<d;i++)
+		daddi $s0, $0, 0
+forf: 	slt $t0, $s0, $a1
+	beq $t0, $0, return
+
+; if(st[i]>=58)
+	dadd $t0, $s0, $a0
+	lbu $t1, 0($t0)
+	slti $t0, $t1, 58
+	; break; 
+	beq $t0, $0, return ; saltiamo a return se la condizione st[i]<58 e' falsa
+
+incr:   daddi $s0, $s0, 1  ; i++
+	j forf
+
+; return i;
+return: move r1, $s0
+	  ld $s0, 0($sp)
+	  daddi $sp, $sp, 8
+	  jr $ra
+
+#include input_unsigned.s
+```
+
+#  Esempio1 lezione del 14 dicembre 2021
+Scrivere un programma in linguaggio Assembly MIPS che traduce il seguente programma C
+```c
+int processa(char *st, int d)
+{
+    int i;
+    for (i = 0; i < d; i++)
+        if (st[i] >= 58)
+            break;
+    return i;
+}
+main()
+{
+    char STRNG[16];
+    int i, val, num;
+    for (i = 0; i < 3; i++)
+    {
+        do
+        {
+            printf("Indica quanti caratteri (numeri) vuoi inserire (>=3))\n");
+            scanf("%d", &num);
+        } while (num < 3);
+        printf("Inserisci la stringa con %d numeri \n", num);
+        scanf("%s", STRNG);
+        val = processa(STRNG, num);
+        printf(" Valore= %d \n", val);
+    }
+}
+```
+### ASSEMBLY MIPS
+```asm
+???
+```
+
+
+#  Esempio2 lezione del 14 dicembre 2021
+Scrivere un programma in linguaggio Assembly MIPS che traduce il seguente programma C
+```c
+int elabora(char *a0, int a1)
+{
+    int i;
+    for (i = 0; i < a1; i++)
+        if (a0[i] < 48)
+            return -1;
+    return a1;
+}
+main()
+{
+    char STRINGA[16];
+    int A[4], i, n;
+    for (i = 0; i < 4; i++)
+    {
+        printf("Inserire una stringa\n");
+        scanf("%s", STRINGA);
+        printf("Inserisci un numero minore di %d \n", strlen(STRINGA));
+        scanf("%d", &n)
+            A[i] = elabora(STRINGA, n);
+        printf("A[%d]=%d", i, A[i]);
+    }
+}
+```
+### ASSEMBLY MIPS
+```asm
+???
+```
