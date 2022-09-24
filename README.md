@@ -3,7 +3,7 @@ Non testato =:warning:
 
 
 
-# REGISTRI :heavy_check_mark:
+# REGISTRI :warning::warning::warning:
 ![Registri](Registri.png)
 ### r0 = $0 = 0
 Registro Nullo
