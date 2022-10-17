@@ -107,13 +107,13 @@ In memoria:
 
 ```
 
-# Indirizzi/puntatore :warning:
+# Indirizzi di Memoria
 ```ruby
-daddi $a0,r0,STR      #salvo indirizzo stringa in a0
+daddi $a0,r0,STR      #indirizzo RAM del label STR in $a0
 ```
-# Valori :warning:
+# Load da Registro a Memoria
 ```ruby
-ld $a0,STR(r0)        #salvo il primo elemento di SRT[0,1,2,3,4,5,6,7] in $a0 =[0]
+ld $a0,STR(r0)        carico $a0 in 0+indirizzo memoria STR
 ```
 
 
