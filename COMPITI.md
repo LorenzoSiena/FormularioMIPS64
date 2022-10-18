@@ -2,7 +2,7 @@
 ```asm
 .data
 stack:  .space 32
-ST:  .space  16
+ST:  .space  16 ; buffer
 
 msg1:     .asciiz "Metti un numero\n"
 msg2:     .asciiz "Metti una stringa\n"
@@ -10,12 +10,12 @@ msgVal:    .asciiz "printf con valore= %d\n"
 
 ;DATA syscall 3 
 stdin:    .word   0   ; stdin
-str_sys3:  .space  8 ;
-dim_sys3:   .word   16
+str_sys3:  .space  8 ; indirizzo buffer
+dim_sys3:   .word   16 ; Nbyte da leggere
 
 ;DATA syscall 5
-str_sys5:  .space  8
-ris:        .space  8
+str_sys5:  .space  8 ;indirizzo stringa da stampare <- [msg1,msg2,msgval]
+ris:        .space  8       ;%d
 
 
 
@@ -27,7 +27,14 @@ daddi   $sp, $sp, 32
 
 daddi   $s0, $0, 0              ; i = 0
 
-for:
+for:	
+
+	slti $t0,$s0,4                  ;;FOR 4 VOLTE
+	beq $t0,$0,end_for
+	
+	daddi $s0,$s0,1	 ; SPOSTAMI! ( i++ )
+	j for 		; SPOSTAMI! (ricomincia il for)	
+
 	;PRINTF1 ------------------------------------------
 	daddi   $t0, $0, msg1
     	sd      $t0, str_sys5($0)
@@ -52,16 +59,21 @@ for:
     	daddi   r14, $0, stdin
     	syscall 3                   ; scanf("%s",ST);
 	;-----------------------------------------------
-    	move    $a1, r1             ; SE VOGLIO LA LUNGHEZZA DELLA STRINGA $a1 = strlen(ST)
+    	move    $a1, r1             ; SE VOGLIO LA LUNGHEZZA DELLA STRINGA $a1 = strlen(ST) SECONDO ARGOMENTO
 	;------------------------------------------------
 	
 
-	;con a0,a1,a2 completati vado nella funzione esterna
+	;con a0,a1,a2(?) completati vado nella funzione esterna
 	jal funz
-	
-	; salvo in ris il valore restituito utile alla printf
-    	sd      r1, ris($0)
+	sd      r1, ris($0)  ; salvo in ris il valore restituito utile alla printf
 
+	;   printf(" Valore= %d n",ris);
+	daddi $t0,$0,msgVal  ; con msgVal dichiaro di voler leggere anche il valore dopo str_sys5
+	sd $t0,str_sys5($0)
+	daddi r14,$0,str_sys5
+	syscall 5
+
+	
 end_for:
 
 	
@@ -88,6 +100,7 @@ funz:
       jr $ra
 
 #include input_unsigned.s
+
 
 ```
 
