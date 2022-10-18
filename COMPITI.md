@@ -30,8 +30,7 @@ daddi   $s0, $0, 0              ; i = 0
 for:	
 
 	slti $t0,$s0,4                  ;;FOR 4 VOLTE
-	beq $t0,$0,end_for
-	
+	beq $t0,r0,end
 	daddi $s0,$s0,1	 ; SPOSTAMI! ( i++ )
 	j for 		; SPOSTAMI! (ricomincia il for)	
 
@@ -39,7 +38,7 @@ for:
 	daddi   $t0, $0, msg1
     	sd      $t0, str_sys5($0)
     	daddi   r14, $0, str_sys5
-	 syscall 5                   	; printf("METTI UN NUMERO\n");
+	syscall 5                   	; printf("METTI UN NUMERO\n");
 	; -----------------------------------------------------
 	 jal     input_unsigned      ; scanf("%d",&num) SYSCALL_UN_NUMERO 
 	move    $a0, r1	 ; PRIMO ARGOMENTO
@@ -50,7 +49,7 @@ for:
 	daddi   $t0, $0, msg2
     	sd      $t0, str_sys5($0)
     	daddi   r14, $0, str_sys5
-	 syscall 5                   	; printf("Metti una stringa\n");
+	syscall 5                   	; printf("Metti una stringa\n");
 	; -----------------------------------------------------
 	
 	;SCANF STRINGA -------------------------
@@ -74,10 +73,9 @@ for:
 	syscall 5
 
 	
-end_for:
-
 	
-end: syscall 0
+end: 
+syscall 0
 
 
 
@@ -88,10 +86,12 @@ funz:
       sd $s0,0($sp)
       sd $s1,8($sp)
 	
-
 	;ROUTINE  con a0,a1,a2
 
-      move r1,$s7 ; SALVO IL RISULTATO in s7
+	lbu $t1, 0($t0)  ;$t1=str[i]
+
+
+      move r1,$s7 ; SALVO IL RISULTATO da s7 a r1
       
      ;POP s0s1
       ld $s0,0($sp)
