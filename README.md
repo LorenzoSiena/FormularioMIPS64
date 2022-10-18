@@ -178,29 +178,68 @@ Tradotto in c:
 ```ruby
 .data
 
-STR: .space 16
+STR: .space 16 #buffer
 
-p1_sys3:     .word 0     #0->STDIN oppure file descriptor
-ind_str:	 .space 8    #dove salvare la stringa
-dim: 	       .word 16    #quanti byte scrivere (16 Byte)
+p1_sys3:     .word 0     #0->STDIN oppure file descriptor [1°parametro]
+ind_str:	 .space 8    #indirizzo del buffer [2°parametro]
+dim: 	       .word 16    #quanti byte scrivere (16 Byte) [3°parametro]
 
 .code
 
-daddi $t0,r0,STR     # ???
-sd $t0,ind_str(r0)   # ???
-daddi r14,r0,p1_sys3 # ???
-syscall 3
+daddi $t0,r0,STR     # Salvo l'indirizzo del buffer su t0
+sd $t0,ind_str(r0)   # Salvo t0(indirizzobuffer) sul 2 parametro della syscall3
+daddi r14,r0,p1_sys3 # Salvo in r14 l'indirizzo del primo parametro della syscall
+syscall 3            
 move $a1,r1  # salvo il numero di byte letti $a1=r1
 # Dopo la syscall trovo 
 # r1 = dimensione stringa / numero parametri letti
-
-
 
 ```
 Tradotto in c:
 ```c
 scanf("%s",STR);
 ```
+## Implementazione Visiva
+
+## Inizializzazione della direttiva .data
+```asm
+.data
+
+STR: .space 16 #buffer
+
+p1_sys3:     .word 0     #0->STDIN oppure file descriptor [1°parametro]
+ind_str:	 .space 8    #indirizzo del buffer [2°parametro]
+dim: 	       .word 16    #quanti byte scrivere (16 Byte) [3°parametro]
+
+```
+![1_sys3](https://user-images.githubusercontent.com/74120782/196509835-b9273f8e-d51e-4e62-aa26-bb0f2ec5c215.jpeg)
+
+
+## [DADDI]Salvo l'indirizzo del buffer su t0
+```asm
+daddi $t0,r0,STR     
+```
+![2_sys3](https://user-images.githubusercontent.com/74120782/196509885-2b2bdc8d-e90f-4d01-8473-8737945345d2.jpeg)
+
+## [STORE]Salvo t0(indirizzobuffer) sul 2 parametro della syscall3
+```asm
+sd $t0,ind_str(r0)   
+```
+![3_sys3](https://user-images.githubusercontent.com/74120782/196509908-fe74a8c4-b432-4a90-97b2-e9f92032802d.jpeg)
+
+## [DADDI SU r14]Salvo in r14 l'indirizzo del primo parametro della syscall
+```asm
+daddi r14,r0,p1_sys3 
+```
+![4_sys3](https://user-images.githubusercontent.com/74120782/196509944-e2acba31-c9fe-4de6-8a50-446afd5365f7.jpeg)
+
+## Chiamata della System call 3
+```asm
+syscall 3  
+```
+![5_sys3](https://user-images.githubusercontent.com/74120782/196509961-331a0e93-6f73-466b-a95c-8ac0db318a9f.jpeg)
+
+
 
 ## SYSCALL 5: PRINTF :heavy_check_mark:
 
