@@ -1,3 +1,96 @@
+# MASTER TEMPLATE
+```asm
+.data
+stack:  .space 32
+ST:  .space  16
+
+msg1:     .asciiz "Metti un numero\n"
+msg2:     .asciiz "Metti una stringa\n"
+msgVal:    .asciiz "printf con valore= %d\n"
+
+;DATA syscall 3 
+stdin:    .word   0   ; stdin
+str_sys3:  .space  8 ;
+dim_sys3:   .word   16
+
+;DATA syscall 5
+str_sys5:  .space  8
+ris:        .space  8
+
+
+
+.code
+;STACK INIT
+daddi   $sp, $0, stack
+daddi   $sp, $sp, 32  
+
+
+daddi   $s0, $0, 0              ; i = 0
+
+for:
+	;PRINTF1 ------------------------------------------
+	daddi   $t0, $0, msg1
+    	sd      $t0, str_sys5($0)
+    	daddi   r14, $0, str_sys5
+	 syscall 5                   	; printf("METTI UN NUMERO\n");
+	; -----------------------------------------------------
+	 jal     input_unsigned      ; scanf("%d",&num) SYSCALL_UN_NUMERO 
+	move    $a0, r1	 ; PRIMO ARGOMENTO
+
+
+
+	;PRINTF2 ------------------------------------------
+	daddi   $t0, $0, msg2
+    	sd      $t0, str_sys5($0)
+    	daddi   r14, $0, str_sys5
+	 syscall 5                   	; printf("Metti una stringa\n");
+	; -----------------------------------------------------
+	
+	;SCANF STRINGA -------------------------
+	daddi   $t0, $0, ST
+    	sd      $t0, str_sys3($0)
+    	daddi   r14, $0, stdin
+    	syscall 3                   ; scanf("%s",ST);
+	;-----------------------------------------------
+    	move    $a1, r1             ; SE VOGLIO LA LUNGHEZZA DELLA STRINGA $a1 = strlen(ST)
+	;------------------------------------------------
+	
+
+	;con a0,a1,a2 completati vado nella funzione esterna
+	jal funz
+	
+	; salvo in ris il valore restituito utile alla printf
+    	sd      r1, ris($0)
+
+end_for:
+
+	
+end: syscall 0
+
+
+
+
+funz:
+     ;PUSH s0s1
+      daddi $sp,$sp,-16
+      sd $s0,0($sp)
+      sd $s1,8($sp)
+	
+
+	;ROUTINE  con a0,a1,a2
+
+      move r1,$s7 ; SALVO IL RISULTATO in s7
+      
+     ;POP s0s1
+      ld $s0,0($sp)
+      ld $s1,8($sp)
+      daddi $sp,$sp,16
+      jr $ra
+
+#include input_unsigned.s
+
+```
+
 # 28/06/2022 T1
 Scrivere un programma in linguaggio Assembly MIPS che traduce il seguente programma C
 ```c
