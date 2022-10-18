@@ -1,6 +1,7 @@
 Testato     =:heavy_check_mark:
 Non testato =:warning:
 
+# [Compiti svolti](COMPITI.md) [:heavy_check_mark:]
 
 
 # REGISTRI :warning::warning::warning:
