@@ -174,7 +174,7 @@ Tradotto in c:
 
 
 
-## SYSCALL 3: READ/SCANF :warning:
+## SYSCALL 3: READ/SCANF :heavy_check_mark:
 ```ruby
 .data
 
@@ -248,15 +248,15 @@ syscall 3
 str1: .asciiz "Stampa solo questa riga”
 str2: .asciiz "Stampa il numero %d”
 
-p1_sys5: .space 8 # primo parametro che deve contenere l’indiririzzo della stringa da visualizzare (mess)
+p1_sys5: .space 8 # primo parametro con indirizzo della stringa da visualizzare (mess)
 val1: .space 8       # SE nella stringa sono presenti N %d, seguono altri N parametri
 
 .code
-sd r1,val(r0)            # salvo il ritorno di una funzione in val(r0) ->OPZIONALE PER %d
 
-daddi $t0,r0,str2        #metto l'indirizzo della stringa2 in t0     
-sd $t0,p1_sys5(r0)       #salvo t0 come prima riga nel par1
-daddi r14,r0,p1_sys5     #salvo il par1
+sd r1,val(r0)            # salvo il ritorno di una funzione in val(r0) ->OPZIONALE PER %d
+daddi $t0,r0,str2        #metto l'indirizzo del messaggio str2 in t0     
+sd $t0,p1_sys5(r0)       #salvo l'indirizzo di str2 nella prima raga del 1 parametro
+daddi r14,r0,p1_sys5     #salvo l'indirizzo 1parametro in r14 
 syscall 5
 ```
 Tradotto in c:
