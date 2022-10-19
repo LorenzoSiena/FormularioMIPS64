@@ -104,6 +104,163 @@ funz:
 
 ```
 
+# 06/09/2022 T1
+```c
+int somma(char *st, int d, char val)
+{
+    int j, sm;
+    sm = 0;
+    for (j = val; j < d; j += 2)
+        sm = sm + st[j] - 48;
+    return sm;
+}
+main()
+{
+    char ST[16];
+    int i, num, ris;
+    for (i = 0; i < 3; i++)
+    {
+        printf("Inserisci una stringa di soli numeri \n");
+        scanf("%s", ST);
+printf("Inserisci 0 per la somma dei numeri in posizione pari, 1
+altrimenti ");
+scanf("%d",&num);
+ris= somma(ST,strlen(ST),num);
+printf("La somma e' %d \n",ris);
+    }
+}
+```
+
+```asm
+.data
+stack:  .space 32
+ST:  .space  16 ; buffer
+
+msg1:     .asciiz "Inserisci 0 per la somma dei numeri in posizione pari,1 altrimenti \n"
+msg2:     .asciiz "Inserisci una stringa di soli numeri\n"
+msgVal:    .asciiz "La somma e' = %d\n"
+
+;DATA syscall 3 
+stdin:    .word   0   ; stdin
+str_sys3:  .space  8 ; indirizzo buffer
+dim_sys3:   .word   16 ; Nbyte da leggere
+
+;DATA syscall 5
+str_sys5:  .space  8 ;indirizzo stringa da stampare <- [msg1,msg2,msgval]
+ris:        .space  8       ;%d
+
+
+
+.code
+;STACK INIT
+daddi   $sp, $0, stack
+daddi   $sp, $sp, 32  
+
+
+daddi   $s0, $0, 0              ; i = 0
+
+for:	
+
+	slti $t0,$s0,3                  ;;FOR 4 VOLTE
+	beq $t0,r0,end
+
+	;inserisci stringa di soli numeri
+	daddi   $t0, $0, msg2
+    	sd      $t0, str_sys5($0)
+    	daddi   r14, $0, str_sys5
+	syscall 5                   
+
+	;SCANF STRINGA -------------------------
+	daddi   $t0, $0, ST
+    	sd      $t0, str_sys3($0)
+    	daddi   r14, $0, stdin
+    	syscall 3                   ; scanf("%s",ST);
+
+    	move    $a1, r1            
+
+
+	;PRINTF2 ---------0 per pari 1 per dispari---------------------------------
+	daddi   $t0, $0, msg1
+    	sd      $t0, str_sys5($0)
+    	daddi   r14, $0, str_sys5
+	syscall 5                   
+	; -----------------------------------------------------
+
+
+	 jal     input_unsigned      ; scanf("%d",&num) SYSCALL_UN_NUMERO 
+	move    $a2, r1	 
+
+
+	daddi $a0,$0,ST	
+
+	
+	;con a0=ST,a1=len(ST),a2=num
+	;completati vado nella funzione esterna
+	
+	jal funz
+	
+
+	sd      r1, ris($0)  ; salvo in ris il valore restituito utile alla printf
+
+	daddi $t0,$0,msgVal 
+	sd $t0,str_sys5($0)
+	daddi r14,$0,str_sys5
+	syscall 5
+
+	daddi $s0,$s0,1	 ; ( i++ )
+	j for 		; (ricomincia il for)	
+
+	
+	
+end: 
+syscall 0
+
+
+
+
+funz:
+     ;PUSH s0s1
+      daddi $sp,$sp,-16
+      sd $s0,0($sp)
+      sd $s1,8($sp)
+
+;a0= ST
+;a1=strlen(ST)
+;a2=j=num      =$S0    [0,1]
+;sm	   =$S1   [va nel return]
+
+move $s0,$a2 ; j=num [0,1]
+move $s1,r0  ;sm=0  
+
+for2:   	slt $t0,$s0,$a1               ;è vero che  $s0 < $a1 ? è vero che [0,1]<[4]LUNGHEZZA STRINGA
+     	beq $t0,r0,end2
+	
+	;+++++++++++++++++++++++++++++++++++
+	dadd    $t1, $a0, $s0   ; $t1 = &st[j]    		t1<----- INDIRIZZO ST + [0,1]
+
+        lbu     $t1, 0($t1)     ; $t1 = st[j]                   t1<----- VALORE INDIRIZZO(ST + [0,1])
+
+	daddi   $t0, $t1, -48   ; $t0 = st[j] - 48	        t0<-------VALORE-48	
+	;+++++++++++++++++++++++++++++++++++
+
+	dadd $s1,$s1,$t0	;sm=sm+(st[j] - 48)
+
+	daddi $s0,$s0,2      ; j +2
+j for2
+end2:
+
+      move r1,$s1 ; SALVO IL RISULTATO da s1 a r1
+      
+     ;POP s0s1
+      ld $s0,0($sp)
+      ld $s1,8($sp)
+      daddi $sp,$sp,16
+      jr $ra
+
+#include input_unsigned.s
+```
+
+
 # 28/06/2022 T1
 Scrivere un programma in linguaggio Assembly MIPS che traduce il seguente programma C
 ```c
