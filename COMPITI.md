@@ -81,26 +81,43 @@ syscall 0
 
 
 funz:
-     ;PUSH s0s1
-      daddi $sp,$sp,-16
-      sd $s0,0($sp)
-      sd $s1,8($sp)
+    ;PUSH s0s1
+    daddi $sp,$sp,-16
+    sd $s0,0($sp)
+    sd $s1,8($sp)
+
+    ;a0 = ST
+    ;a1 = strlen(ST)
+    ;a2 =   
+    ;j     =$S0   [for2]
+    ;r	   =$S1   [va nel return]
+    
+    move $s0,r0 ; j=0
+    move $s1,r0 ; r=0  
+
+for2:   
+    slt $t0,$s0,$LIMITE               ;è vero che $s0 < $[LIMITE] ?
+    beq $t0,r0,end2
 	
-	;ROUTINE  con a0,a1,a2
 
-	lbu $t1, 0($t0)  ;$t1=str[i]
+    ;LOAD
+    dadd    $t1,$a0, $s0   ; $t1 = &st[j]    		t1<----- INDIRIZZO ST + [j]
+    lbu $t1,0($t1)     ; $t1 = st[j]           t1<----- VALORE INDIRIZZO(ST + [j])
+    daddi   $t0,$t1, -48   ; $t0 = st[j] - 48      t0<-------VALORE-48	
+    dadd    $s1,$s1,$t0	    ; r=r+ (st[j] - 48)
+	
+    daddi   $s0,$s0,1      ; j+1
+    j for2
+end2:
 
-
-      move r1,$s7 ; SALVO IL RISULTATO da s7 a r1
-      
-     ;POP s0s1
-      ld $s0,0($sp)
-      ld $s1,8($sp)
-      daddi $sp,$sp,16
-      jr $ra
+    move r1,$s1 ; SALVO IL RISULTATO da s1 a r1  
+    ;POP s0s1
+    ld $s0,0($sp)
+    ld $s1,8($sp)
+    daddi $sp,$sp,16
+    jr $ra
 
 #include input_unsigned.s
-
 
 ```
 
